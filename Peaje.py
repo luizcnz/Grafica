@@ -10,9 +10,16 @@ import tkinter.scrolledtext as ScrolledText
 import subprocess
 import time
 
-v0 = tk.Tk()
-v0.geometry("550x500+0+0")
-v0.title("Examen")
+ventana = tk.Tk()
+ventana.geometry("1250x750")
+ventana.title("Peajes")
+
+# Configuracion de texto
+texto=TkFont.Font(family="Calibri bold italic",size=14)
+
+# Etiquetas
+#-----------------------------
+Label_Titulo=tk.Label(ventana,text="Cobro de Peaje",font=texto).place(relx=0.01, rely=0.01, relheight=0.05, relwidth=1)
 
 # Zona de Imagenes
 # img_on=tk.PhotoImage(file="on.png")
@@ -140,47 +147,39 @@ v0.title("Examen")
 #             MessageBox.showinfo(message="Proceso Realizado")
 
 
-def tiempo():
-             text1=TkFont.Font(family="Arial", size=20)
-             t=time.strftime("%H:%M:%S")
-             label_tiempo=tk.Label(v0,text=t,font=text1).place(x=250, y=400)
-             v0.after(1000,tiempo)
+# def tiempo():
+#              text1=TkFont.Font(family="Arial", size=20)
+#              t=time.strftime("%H:%M:%S")
+#              label_tiempo=tk.Label(v0,text=t,font=text1).place(x=250, y=400)
+#              v0.after(1000,tiempo)
 
-tiempo()
+# tiempo()
 
             
-# Configuracion de texto
-text1=TkFont.Font(family="Arial",size=12)
-
-# Etiquetas
-label_horai=tk.Label(v0,text="Hora Inicial:",font=text1).place(x=300,y=50)
-label_minini=tk.Label(v0,text="Minuto Inicial:",font=text1).place(x=300,y=80)
-label_horaf=tk.Label(v0,text="Hora Final:",font=text1).place(x=300,y=110)
-label_minif=tk.Label(v0,text="Hora Inicial:",font=text1).place(x=300,y=140)
 
 
 
 
 # Variables
-global horai
-global minini
-global horaf
-global minif
-horai=tk.StringVar()
-minini=tk.StringVar()
-horaf=tk.StringVar()
-minif=tk.StringVar()
+#global horai
+#global minini
+#global horaf
+#global minif
+#horai=tk.StringVar()
+#minini=tk.StringVar()
+#horaf=tk.StringVar()
+#minif=tk.StringVar()
 
 # Cajas de texto
-txt_horai=tk.Entry(v0,textvariable=horai,width=5).place(x=400,y=50)
+#txt_horai=tk.Entry(v0,textvariable=horai,width=5).place(x=400,y=50)
 # txt_minini=Entry(v0,textvariable=minini,width=5).place(x=400,y=80)
 # txt_horaf=Entry(v0,textvariable=horaf,width=5).place(x=400,y=110)
 # txt_minif=Entry(v0,textvariable=minif,width=5).place(x=400,y=140)
 
 # Botones
-btn_save=tk.Button(v0,text="save",command=tiempo).place(x=400,y=180)
+#btn_save=tk.Button(v0,text="save",command=tiempo).place(x=400,y=180)
 # btn_on=Button(v0,text="ON",command=on_local).place(x=400, y=220)
 # btn_off=Button(v0,text="OFF",command=off_local).place(x=400, y=260)
 # btn_exit=Button(v0,text="Salir",command=exit).place(x=400, y=400)
 
-v0.mainloop()
+ventana.mainloop()
