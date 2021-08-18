@@ -13,7 +13,7 @@ from pymysql.connections import Connection
 import pytesseract
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 import pymysql
-
+import array
 from datetime import date
 
 import subprocess
@@ -89,18 +89,6 @@ def ticket():
             self.cursor = self.connection.cursor()
             print("Conexion Exitosa!!!")
 
-        # def ingresar(self):#inseercion de datos
-        #     sql='insert into registros(num_placa) values ("{}")'.format(texto)
-
-        #     print("query: ",sql)
-        #     try:
-        #         self.cursor.execute(sql)
-        #         self.connection.commit()
-        #         print("Se Guardo Con Exito")#confirmacion de guardado
-            
-        #     except Exception as e:
-        #         raise
-
         def seleccionar(self):#inseercion de datos
             div = texto.split()
             dbplaca = div[0]+" "+div[1]
@@ -163,9 +151,86 @@ def ticket():
     #label_variable=tk.Label(v0,text=""+str(DataBase.sql)+"",font=escanear.datos).place(x=450,y=50)
 
 
+def factura():
 
+    placaFactura="HBE 9052"
+    detailsPrices = array.array('i', [])
+    details = array.array('i', [])
+    class DataBase:
+        def __init__(self):#coneccion con la base de datos
+            self.connection=pymysql.connect(host='173.249.21.6', user='movil2',password='carwash2021',db='ProyectoFinal_Python')
 
+            self.cursor = self.connection.cursor()
+            print("Conexion Exitosa!!!")
 
+        def genFactura(self):#inseercion de datos
+
+            sql='SELECT * FROM Vehiculos where Placa = "'+str(placaFactura)+'"'
+
+            print("query: ",sql)
+            try:
+                self.cursor.execute(sql)
+                self.connection.commit()
+                rows = self.cursor.fetchall()
+                for row in rows:
+                    print(row)
+                
+                idVehicle = row[0]
+                print("prueba con el id del auto:",idVehicle)
+            
+            except Exception as e:
+                raise
+
+            sql2='SELECT * FROM Ticket where IdVehiculos = "'+str(idVehicle)+'"'
+            print("query2: ",sql2)
+            
+
+            try:
+                price=0
+                self.cursor.execute(sql2)
+                self.connection.commit()
+                rows = self.cursor.fetchall()
+                for row in rows:
+                    print(row)
+                    price = price+row[4]
+                    details.append( row[0])
+                    detailsPrices.append( row[4])
+                
+                idTariff = row[0]
+                
+                print("Total de la Factura:",price)
+                print("Array de tickets: ",details)
+            except Exception as e:
+                raise
+
+            sql3='INSERT into Factura(IdVehiculos, Total, Fecha, IdEstadoFactura) VALUES ('+str(idVehicle)+', '+str(price)+', "'+str(today)+'", 1)'
+            print("query3: ",sql3)
+
+            try:
+                price=0
+                self.cursor.execute(sql3)
+                self.connection.commit()
+                rows = self.cursor.fetchall()
+                idFactura = self.cursor.lastrowid
+                i=0
+
+                for detalle in details:
+                    
+                    sql4='INSERT into DetalleFactura(IdFactura, IdTicket, Precio) VALUES ('+str(idFactura)+','+str(detalle)+', '+str(detailsPrices[i])+')'
+                    print("query4: ",sql4)
+                    self.cursor.execute(sql4)
+                    self.connection.commit()
+                    print("Se Guardo Con Exito La Consulta: ",sql4)#confirmacion de guardado
+
+                i=i+1
+
+            
+            except Exception as e:
+                raise
+            
+            
+    database = DataBase()
+    database.genFactura()
             
 
 
@@ -199,6 +264,7 @@ minif=tk.StringVar()
 # Botones
 #-----------------------------
 btn_save=tk.Button(v0,text="Escanear",command=ticket).place(x=400,y=180)
+btn_save=tk.Button(v0,text="factura",command=factura).place(x=400,y=123)
 # btn_on=Button(v0,text="ON",command=on_local).place(x=400, y=220)
 # btn_off=Button(v0,text="OFF",command=off_local).place(x=400, y=260)
 # btn_exit=Button(v0,text="Salir",command=exit).place(x=400, y=400)
@@ -206,8 +272,3 @@ btn_save=tk.Button(v0,text="Escanear",command=ticket).place(x=400,y=180)
 
 
 v0.mainloop()
-                  
-
-
-
-
