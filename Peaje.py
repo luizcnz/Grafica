@@ -25,38 +25,42 @@ textobotones=TkFont.Font(family="Calibri italic",size=12)
 Label_Titulo=tk.Label(ventana,text="Cobro de Peaje",font=texto).place(relx=0.01, rely=0.01, relheight=0.05, relwidth=1)
 
 #----------------------------------CONTENEDOR*------------------------------------------
-marcoCentral= tk.Frame(ventana,bg="#E3E1E1",width=1250,height=750)
-marcoCentral.pack(padx=10,pady=50,anchor="nw")
+marcoCentral= tk.Frame(ventana,bg="#E3E1E1").place(relx=0.01, rely=0.06,relheight=0.90, relwidth=0.98)
+
 
 #------------------LABEl UBICACION-------------------
 
-lblPlaca=tk.Label(marcoCentral,text="Ubicacion del Peaje ",font=textoEtiqueta,bg="#E3E1E1") .place(x=50, y=20)
-cmbUbication=ttk.Combobox(marcoCentral,width=30, values=["Marcovia","Choluteca","San Lorenzo"]).place(x=220, y=25)
+lblPlaca=tk.Label(marcoCentral,text="Ubicacion del Peaje ",font=textoEtiqueta,bg="#E3E1E1") .place(relx=0.02, rely=0.11)
+cmbUbication=ttk.Combobox(marcoCentral,width=30, values=["Marcovia","Choluteca","San Lorenzo"]).place(relx=0.15, rely=0.12)
 
 
 
 #------------------------------------IMAGEN DEL CARRO----------------------------------
 auto = tk.PhotoImage(file="Fotos/auto1.png")
-panel = tk.Label(marcoCentral, image = auto, width=600,height=500).place(x=10,y=70)
+panel = tk.Label(marcoCentral, image = auto, width=600,height=500).place(relx=0.02, rely=0.18)
 
-lblPlaca=tk.Label(marcoCentral,text="Numero de Placa Detectado: ",font=textoEtiqueta,bg="#E3E1E1") .place(x=30,y=590)
 
-txtPlaca=tk.Entry(marcoCentral,width=30,justify=tk.RIGHT).place(x=270,y=595)
+#------------------------------------LABEL FINAL----------------------------------
+lblPlaca=tk.Label(marcoCentral,text="Numero de Placa Detectado: ",font=textoEtiqueta,bg="#E3E1E1").place(relx=0.02, rely=0.88)
+
+txtPlaca=tk.Entry(marcoCentral,width=30,justify=tk.RIGHT).place(relx=0.22, rely=0.89)
 
 imgSearch=tk.PhotoImage(file="iconos/buscar32.png")
-btnSearch=tk.Button(marcoCentral,image=imgSearch,text=" Buscar ", font=textobotones,compound="left").place(x=480,y=585)
+btnSearch=tk.Button(marcoCentral,image=imgSearch,text=" Buscar ", font=textobotones,compound="left").place(relx=0.38, rely=0.88)
 
+#------------------------------------REPORTE -------------------------------------------------------
+panelReporte = tk.Label(marcoCentral,bg="#CFCFCF").place(relx=0.51, rely=0.18,relheight=0.30, relwidth=0.47)
 #EL place la X se mueve para de izquierda a derecha
 imgTicket=tk.PhotoImage(file="iconos/boleto32.png")
-btnTicket=tk.Button(marcoCentral,image=imgTicket,text=" Ticket ", font=textobotones,compound="left").place(x=700,y=150)
+btnTicket=tk.Button(marcoCentral,image=imgTicket,text=" Ticket ", font=textobotones,compound="left").place(relx=0.91, rely=0.49)
+#-------------------------------------------------Imprimir------------------------------------------------
 
+panelPrint = tk.Label(marcoCentral,bg="#CFCFCF").place(relx=0.51, rely=0.55,relheight=0.30, relwidth=0.47)
 imgFactura=tk.PhotoImage(file="iconos/cuenta32.png")
-btnFactura=tk.Button(marcoCentral,image=imgFactura,text=" Factura ", font=textobotones,compound="left").place(x=700,y=250)
-
-
+btnFactura=tk.Button(marcoCentral,image=imgFactura,text=" Factura ", font=textobotones,compound="left").place(relx=0.51, rely=0.88)
 
 imgRefresh=tk.PhotoImage(file="iconos/recargar.png")
-btnRefresh=tk.Button(marcoCentral,image=imgRefresh,text=" Nuevo ", font=textobotones,compound="left").place(x=700,y=450)
+btnRefresh=tk.Button(marcoCentral,image=imgRefresh,text=" Nuevo ", font=textobotones,compound="left").place(relx=0.90, rely=0.88)
 
 
 
