@@ -598,43 +598,52 @@ def ticket():
         ford=True
         logo = tk.PhotoImage(file="Fotos/ford1.png")
         marca.configure(image=logo)
-
+        marca.image = logo
     if((len(logo2)>0)):
         ford=True
         logo = tk.PhotoImage(file="Fotos/ford2.png")
         marca.configure(image=logo)
+        marca.image = logo
     if((len(logo3)>0)):
         honda=True
         logo = tk.PhotoImage(file="Fotos/honda1.png")
         marca.configure(image=logo)
+        marca.image = logo
     if((len(logo4)>0)):
         hyundai=True
         logo = tk.PhotoImage(file="Fotos/hyundai1.png")
         marca.configure(image=logo)
+        marca.image = logo
     if((len(logo5)>0)):
         hyundai=True
         logo = tk.PhotoImage(file="Fotos/hyundai2.png")
         marca.configure(image=logo)
+        marca.image = logo
     if((len(logo6)>0)):
         hyundai=True
         logo = tk.PhotoImage(file="Fotos/hyundai3.png")
         marca.configure(image=logo)
+        marca.image = logo
     if((len(logo7)>0)):
         nissan=True
         logo = tk.PhotoImage(file="Fotos/nissan1.png")
         marca.configure(image=logo)
+        marca.image = logo
     if((len(logo8)>0)):
         toyota=True
         logo = tk.PhotoImage(file="Fotos/toyota1.png")
         marca.configure(image=logo)
+        marca.image = logo
     if((len(logo9)>0)):
         toyota=True
         logo = tk.PhotoImage(file="Fotos/toyota2.png")
         marca.configure(image=logo)
+        marca.image = logo
     if((len(logo10)>0)):
         toyota=True
         logo = tk.PhotoImage(file="Fotos/toyota3.png")
         marca.configure(image=logo)
+        marca.image = logo
     
 
     if ford==True:
@@ -802,9 +811,9 @@ lblOwner= Label(frameReport,text="Titular del Vehiculo: ",font=textoEnunciado, b
 lblOwnerResult= Label(frameReport,text="Prueba ",font=textoResultado, bg="#CFCFCF")
 lblOwnerResult.place(relx=0.30, rely=0.03)
 
-lblUbication= Label(frameReport,text="Ubicacion: ",font=textoEnunciado, bg="#CFCFCF").place(relx=0.70, rely=0.03)
+lblUbication= Label(frameReport,text="Ubicacion: ",font=textoEnunciado, bg="#CFCFCF").place(relx=0.50, rely=0.03)
 lblUbicationResult= Label(frameReport,text="SPS",font=textoResultado, bg="#CFCFCF")
-lblUbicationResult.place(relx=0.85, rely=0.03)
+lblUbicationResult.place(relx=0.65, rely=0.03)
 
 lblReport= Label(frameReport,text="Reporte: ",font=textoEnunciado, bg="#CFCFCF").place(relx=0.01, rely=0.17)
 lblReportResult= Listbox(frameReport,font=textoResultado, bg="#CFCFCF", width=48, height=8)
