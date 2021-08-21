@@ -26,7 +26,7 @@ v0.title("Examen")
 today = date.today()
 ubicacionPeaje=2
 
-image = cv2.imread('Fotos/auto6.jpg')
+image = cv2.imread('Fotos/HBI7145.jpg')
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 #cada una de estas propiedades son variaciones de la imagen que nos pueden servir para poder detectar la placa

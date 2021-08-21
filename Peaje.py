@@ -26,29 +26,75 @@ ventana.geometry("1250x750")
 ventana.title("Peajes")
 ventana.resizable(0,0)
 
+
 num = 1
 image = cv2.imread('Fotos/auto1.jpg')
-ubicacionPeaje=2
+ubicacionPeaje=1
 today = date.today()
 textoplaca = 'HBE 9052'
 
+
 # Area de funciones
 def rotar():
+    global ubicacionPeaje
     global textoplaca
     global num
-    vehiculosFotos = ["auto1.png","auto2.png"]
+
+    if cmbUbication.get()=="Marcovia":
+        ubicacionPeaje=1
+    if cmbUbication.get()=="Choluteca":
+        ubicacionPeaje=2
+    if cmbUbication.get()=="San Lorenzo":
+        ubicacionPeaje=3
+
+    print("Lugar de peaje: ",cmbUbication.get())
+    print("ID del Lugar de peaje: ",ubicacionPeaje)
+
+    lblUbicationResult.configure(text=cmbUbication.get())
+
+    vehiculosFotos = ["auto1.png","auto2.png","auto3.png","auto4.png","auto5.png","auto6.png","auto7.png","auto8.png","auto9.png","auto10.png"]
     auto = PhotoImage(file="Fotos/"+vehiculosFotos[num])
     global image 
 
-    vehiculosPlacas = ["auto1.jpg","auto2.jpg"]
+    vehiculosPlacas = ["auto1.jpg","auto2.jpg","auto3.jpg","auto4.jpg","auto5.jpg","auto6.jpg","auto7.jpg","auto8.jpg","auto9.jpg","auto10.jpg"]
     image = cv2.imread('Fotos/'+vehiculosPlacas[num])
 
     panel.configure(image=auto)
     panel.image = auto
-    if num >= 1:
+    #print(num)
+    if num == 9:
         num=0
     else:
         num+=1
+
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    gray = cv2.blur(gray,(3,3))
+    canny = cv2.Canny(gray,150,200)
+    cnts,_ = cv2.findContours(canny,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+
+    vuelta = 0
+    for c in cnts:
+        #contar=contar+1
+        area = cv2.contourArea(c)
+
+        x,y,w,h = cv2.boundingRect(c)
+        epsilon = 0.05*cv2.arcLength(c,True)
+        approx = cv2.approxPolyDP(c,epsilon,True)
+        
+        if len(approx)==4 and area>9000:
+            print('area=',area)
+            vuelta=vuelta+1
+            
+            aspect_ratio = float(w)/h
+            
+            if aspect_ratio>2:
+                placa = gray[y:y+h,x:x+w]
+                txt = pytesseract.image_to_string(placa,config='--psm 10')
+                split_string = txt.split()
+                textoplaca = split_string[0]+" "+split_string[1]
+    
+                lblPlacaText.configure(text=textoplaca)
+
 
 def ticket():
 
@@ -74,7 +120,7 @@ def ticket():
             
             if aspect_ratio>2:
                 placa = gray[y:y+h,x:x+w]
-                txt = pytesseract.image_to_string(placa,config='--psm 12')
+                txt = pytesseract.image_to_string(placa,config='--psm 10')
                 split_string = txt.split()
                 textoplaca = split_string[0]+" "+split_string[1]
                 #text = pytesseract.image_to_string(image)
@@ -244,9 +290,10 @@ marcoCentral= tk.Frame(ventana,bg="#E3E1E1").place(relx=0.01, rely=0.06,relheigh
 #------------------LABEl UBICACION-------------------
 
 lblPlaca=tk.Label(marcoCentral,text="Ubicacion del Peaje ",font=textoEtiqueta,bg="#E3E1E1") .place(relx=0.02, rely=0.11)
-cmbUbication=ttk.Combobox(marcoCentral,width=30, values=["Marcovia","Choluteca","San Lorenzo"]).place(relx=0.15, rely=0.12)
+cmbUbication=ttk.Combobox(marcoCentral,width=30, values=["Marcovia","Choluteca","San Lorenzo"], state='readonly')
+cmbUbication.place(relx=0.15, rely=0.12)
 
-
+cmbUbication.set("Marcovia")
 
 #------------------------------------IMAGEN DEL CARRO----------------------------------
 auto = tk.PhotoImage(file="Fotos/auto1.png")
@@ -256,8 +303,10 @@ panel.place(relx=0.02, rely=0.18)
 
 #------------------------------------LABEL FINAL----------------------------------
 lblPlaca=tk.Label(marcoCentral,text="Numero de Placa Detectado: ",font=textoEtiqueta,bg="#E3E1E1").place(relx=0.02, rely=0.88)
+lblPlacaText=tk.Label(marcoCentral,text=textoplaca,font=textoEtiqueta,bg="#E3E1E1")
+lblPlacaText.place(relx=0.22, rely=0.88)
 
-txtPlaca=tk.Entry(marcoCentral,width=30,justify=tk.RIGHT).place(relx=0.22, rely=0.89)
+#txtPlaca=tk.Entry(marcoCentral,width=30,justify=tk.RIGHT).place(relx=0.22, rely=0.89)
 
 imgSearch=tk.PhotoImage(file="iconos/buscar32.png")
 btnSearch=tk.Button(marcoCentral,image=imgSearch,text=" Buscar ", font=textobotones,compound="left").place(relx=0.38, rely=0.88)
@@ -267,13 +316,16 @@ frameReport = Frame()
 frameReport.place(relx=0.51, rely=0.18,relheight=0.30, relwidth=0.47)
 frameReport.config(bg="#CFCFCF")
 lblOwner= Label(frameReport,text="Titular del Vehiculo: ",font=textoEnunciado, bg="#CFCFCF").place(relx=0.01, rely=0.03)
-lblOwnerResult= Label(frameReport,text="Prueba ",font=textoResultado, bg="#CFCFCF").place(relx=0.30, rely=0.03)
+lblOwnerResult= Label(frameReport,text="Prueba ",font=textoResultado, bg="#CFCFCF")
+lblOwnerResult.place(relx=0.30, rely=0.03)
 
 lblUbication= Label(frameReport,text="Ubicacion: ",font=textoEnunciado, bg="#CFCFCF").place(relx=0.70, rely=0.03)
-lblUbicationResult= Label(frameReport,text="SPS ",font=textoResultado, bg="#CFCFCF").place(relx=0.85, rely=0.03)
+lblUbicationResult= Label(frameReport,text="SPS",font=textoResultado, bg="#CFCFCF")
+lblUbicationResult.place(relx=0.85, rely=0.03)
 
 lblReport= Label(frameReport,text="Reporte: ",font=textoEnunciado, bg="#CFCFCF").place(relx=0.01, rely=0.17)
-lblReportResult= Label(frameReport,text="Sin Reporte ",font=textoResultado, bg="#CFCFCF").place(relx=0.30, rely=0.17)
+lblReportResult= Label(frameReport,text="Sin Reporte ",font=textoResultado, bg="#CFCFCF")
+lblReportResult.place(relx=0.30, rely=0.17)
 
 
 #panelReporte = tk.Label(marcoCentral,bg="#CFCFCF").place(relx=0.51, rely=0.18,relheight=0.30, relwidth=0.47)
