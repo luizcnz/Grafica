@@ -26,7 +26,7 @@ v0.title("Examen")
 today = date.today()
 ubicacionPeaje=2
 
-image = cv2.imread('Fotos/auto 1.jpg')
+image = cv2.imread('Fotos/auto6.jpg')
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 #cada una de estas propiedades son variaciones de la imagen que nos pueden servir para poder detectar la placa
@@ -72,70 +72,70 @@ def ticket():
             
             if aspect_ratio>2:
                 placa = gray[y:y+h,x:x+w]
-                txt = pytesseract.image_to_string(placa,config='--psm 12')
+                txt = pytesseract.image_to_string(placa,config='--psm 10')
                 split_string = txt.split()
                 texto = split_string[0]+" "+split_string[1]
                 #text = pytesseract.image_to_string(image)
 
-                cv2.imshow('PLACA',placa)
-                cv2.moveWindow('PLACA',780,10)
+                #cv2.imshow('PLACA',placa)
+                #cv2.moveWindow('PLACA',780,10)
                 cv2.rectangle(image,(x,y),(x+w,y+h),(0,255,0),3)
                 cv2.putText(image,texto,(x-20,y-10),1,2.2,(0,255,0),3)
 
-    class DataBase:
-        def __init__(self):#coneccion con la base de datos
-            self.connection=pymysql.connect(host='173.249.21.6', user='movil2',password='carwash2021',db='ProyectoFinal_Python')
+    # class DataBase:
+    #     def __init__(self):#coneccion con la base de datos
+    #         self.connection=pymysql.connect(host='173.249.21.6', user='movil2',password='carwash2021',db='ProyectoFinal_Python')
 
-            self.cursor = self.connection.cursor()
-            print("Conexion Exitosa!!!")
+    #         self.cursor = self.connection.cursor()
+    #         print("Conexion Exitosa!!!")
 
-        def seleccionar(self):#inseercion de datos
-            div = texto.split()
-            dbplaca = div[0]+" "+div[1]
-            sql='SELECT * FROM Vehiculos where Placa = "'+str(dbplaca)+'"'
+    #     def seleccionar(self):#inseercion de datos
+    #         div = texto.split()
+    #         dbplaca = div[0]+" "+div[1]
+    #         sql='SELECT * FROM Vehiculos where Placa = "'+str(dbplaca)+'"'
 
-            print("query: ",sql)
-            try:
-                self.cursor.execute(sql)
-                self.connection.commit()
-                rows = self.cursor.fetchall()
-                for row in rows:
-                    print(row)
+    #         print("query: ",sql)
+    #         try:
+    #             #self.cursor.execute(sql)
+    #             #self.connection.commit()
+    #             rows = self.cursor.fetchall()
+    #             for row in rows:
+    #                 print(row)
                 
-                idVehicle = row[0]
-                idVehicleType = row[4]
-                print("prueba con el id del tipo de auto:",idVehicleType)
+    #             idVehicle = row[0]
+    #             idVehicleType = row[4]
+    #             print("prueba con el id del tipo de auto:",idVehicleType)
             
-            except Exception as e:
-                raise
+    #         except Exception as e:
+    #             raise
 
-            sql2='SELECT IdTarifaPeaje,precio FROM TarifaPeaje where IdTipoVehiculo = "'+str(idVehicleType)+'" and IdPeaje = "'+str(ubicacionPeaje)+'"'
+    #         sql2='SELECT IdTarifaPeaje,precio FROM TarifaPeaje where IdTipoVehiculo = "'+str(idVehicleType)+'" and IdPeaje = "'+str(ubicacionPeaje)+'"'
 
-            print("query: ",sql2)
-            try:
-                self.cursor.execute(sql2)
-                self.connection.commit()
-                rows2 = self.cursor.fetchall()
-                for row2 in rows2:
-                    print(row2[0])
+    #         print("query: ",sql2)
+    #         try:
+    #             #self.cursor.execute(sql2)
+    #             #self.connection.commit()
+    #             rows2 = self.cursor.fetchall()
+    #             for row2 in rows2:
+    #                 print(row2[0])
                 
-                idTariff = row2[0]
-                price = row2[1]
-                print("Precio del auto:",price)
+    #             idTariff = row2[0]
+    #             price = row2[1]
+    #             print("Precio del auto:",price)
             
-            except Exception as e:
-                raise
+    #         except Exception as e:
+    #             raise
 
-            sql3='INSERT into Ticket(Fecha, IdVehiculos, IdTarifaPeaje, Subtotal) VALUES ("'+str(today)+'", '+str(idVehicle)+', '+str(idTariff)+', '+str(price)+')'
-            print("query: ",sql3)
+    #         sql3='INSERT into Ticket(Fecha, IdVehiculos, IdTarifaPeaje, Subtotal) VALUES ("'+str(today)+'", '+str(idVehicle)+', '+str(idTariff)+', '+str(price)+')'
+    #         print("query: ",sql3)
             
-            try:
-                self.cursor.execute(sql3)
-                self.connection.commit()
-                print("Se Guardo Con Exito La Consulta: ",sql3)#confirmacion de guardado
+    #         try:
+    #             self.cursor.execute(sql3)
+    #             self.connection.commit()
+    #             print("Se Guardo Con Exito La Consulta: ",sql3)#confirmacion de guardado
                 
-            except Exception as e:
-                    raise
+    #         except Exception as e:
+    #                 raise
 
         
     
@@ -143,9 +143,9 @@ def ticket():
     cv2.imshow('Image',image)
     cv2.moveWindow('Image',45,10)
             
-    database = DataBase()
-    #database.ingresar()
-    database.seleccionar()
+    # database = DataBase()
+    # #database.ingresar()
+    # database.seleccionar()
 
 
     #label_variable=tk.Label(v0,text=""+str(DataBase.sql)+"",font=escanear.datos).place(x=450,y=50)
@@ -169,7 +169,7 @@ def factura():
 
             print("query: ",sql)
             try:
-                self.cursor.execute(sql)
+                #self.cursor.execute(sql)
                 self.connection.commit()
                 rows = self.cursor.fetchall()
                 for row in rows:
@@ -187,7 +187,7 @@ def factura():
 
             try:
                 price=0
-                self.cursor.execute(sql2)
+                #self.cursor.execute(sql2)
                 self.connection.commit()
                 rows = self.cursor.fetchall()
                 for row in rows:
@@ -208,7 +208,7 @@ def factura():
 
             try:
                 price=0
-                self.cursor.execute(sql3)
+                #self.cursor.execute(sql3)
                 self.connection.commit()
                 rows = self.cursor.fetchall()
                 idFactura = self.cursor.lastrowid
@@ -218,7 +218,7 @@ def factura():
                     
                     sql4='INSERT into DetalleFactura(IdFactura, IdTicket, Precio) VALUES ('+str(idFactura)+','+str(detalle)+', '+str(detailsPrices[i])+')'
                     print("query4: ",sql4)
-                    self.cursor.execute(sql4)
+                    #self.cursor.execute(sql4)
                     self.connection.commit()
                     print("Se Guardo Con Exito La Consulta: ",sql4)#confirmacion de guardado
 
