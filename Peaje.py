@@ -151,6 +151,8 @@ def buscar():
 
 
 def vertickets():
+    lstTicketResult.delete(0,END)
+
     global textoplaca
     if cmbUbication.get()=="Marcovia":
         ubicacionPeaje=1
@@ -393,14 +395,6 @@ def ticket():
             except Exception as e:
                     raise
 
-        
-    
-    print('PLACA: ',textoplaca)
-            
-    database = DataBase()
-    #database.ingresar()
-    database.seleccionar()
-
 
     #inicio del Match Template
 
@@ -497,60 +491,7 @@ def ticket():
         marcaVehiculo="toyota"
         print(marcaVehiculo)
 
-    class DataBase:
-        def __init__(self):#coneccion con la base de datos
-            self.connection=pymysql.connect(host='173.249.21.6', user='movil2',password='carwash2021',db='ProyectoFinal_Python')
-
-            self.cursor = self.connection.cursor()
-            print("Conexion Exitosa!!!")
-
-        def seleccionar(self):#inseercion de datos
-            div = textoplaca.split()
-            dbplaca = div[0]+" "+div[1]
-            sql='SELECT * FROM Vehiculos where Placa = "'+str(dbplaca)+'"'
-
-            print("query: ",sql)
-            try:
-                self.cursor.execute(sql)
-                self.connection.commit()
-                rows = self.cursor.fetchall()
-                for row in rows:
-                    print(row)
-                
-                idVehicle = row[0]
-                idVehicleType = row[4]
-                print("prueba con el id del tipo de auto:",idVehicleType)
-            
-            except Exception as e:
-                raise
-
-            sql2='SELECT IdTarifaPeaje,precio FROM TarifaPeaje where IdTipoVehiculo = "'+str(idVehicleType)+'" and IdPeaje = "'+str(ubicacionPeaje)+'"'
-
-            print("query: ",sql2)
-            try:
-                self.cursor.execute(sql2)
-                self.connection.commit()
-                rows2 = self.cursor.fetchall()
-                for row2 in rows2:
-                    print(row2[0])
-                
-                idTariff = row2[0]
-                price = row2[1]
-                print("Precio del auto:",price)
-            
-            except Exception as e:
-                raise
-
-            sql3='INSERT into Ticket(Fecha, IdVehiculos, IdTarifaPeaje, Subtotal) VALUES ("'+str(today)+'", '+str(idVehicle)+', '+str(idTariff)+', '+str(price)+')'
-            print("query: ",sql3)
-            
-            try:
-                self.cursor.execute(sql3)
-                self.connection.commit()
-                print("Se Guardo Con Exito La Consulta: ",sql3)#confirmacion de guardado
-                
-            except Exception as e:
-                    raise
+    
 
         
     
@@ -563,7 +504,7 @@ def ticket():
 
 #funcion para generar una factura en base a los tickets del vehiculo
 def factura():
-
+    global textoplaca
     placaFactura = textoplaca
     detailsPrices = array.array('i', [])
     details = array.array('i', [])
@@ -592,7 +533,7 @@ def factura():
             except Exception as e:
                 raise
 
-            sql2='SELECT * FROM Ticket where IdVehiculos = "'+str(idVehicle)+'"'
+            sql2='SELECT * FROM Ticket where IdVehiculos = "'+str(idVehicle)+'" and Estado_Pago=0'
             print("query2: ",sql2)
             
 
@@ -639,6 +580,15 @@ def factura():
             except Exception as e:
                 raise
             
+            sql5='UPDATE Ticket SET Estado_Pago = 1 WHERE Ticket.IdVehiculos ="'+str(idVehicle)+'"'
+            print("query3: ",sql3)
+            try:
+                self.cursor.execute(sql5)
+                self.connection.commit()
+                rows = self.cursor.fetchall()
+                print("Tickets actualizados con exito")
+            except Exception as e:
+                raise
             
     database = DataBase()
     database.genFactura()
