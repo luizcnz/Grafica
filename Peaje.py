@@ -51,7 +51,7 @@ def buscar():
     lblUbicationResult.configure(text=cmbUbication.get())
 
     #deteccion de la placa del auto cuando se rotan o buscan----------------------------
-    
+    graytemplate = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = cv2.blur(gray,(3,3))
     canny = cv2.Canny(gray,150,200)
@@ -133,7 +133,7 @@ def buscar():
                     print(row)
                     report.append( row[0])
                     detailreport.append( row[1])
-                    listdata = "Reporte: "+row[0]+" - Tipo de Reporte: "+row[1]
+                    listdata = "Reporte: "+row[0]+" - Tipo: "+row[1]
                     lblReportResult.insert(indexlist,listdata)
                 
                 print("Reportes:",report)
@@ -148,6 +148,138 @@ def buscar():
             
     database = DataBase()
     database.seleccionar()
+
+    def points_template_matching(image, template):
+        points = []
+        threshold = 0.9
+        res = cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED)
+        candidates = np.where(res >= threshold)
+        candidates = np.column_stack([candidates[1], candidates[0]])
+        i = 0
+        while len(candidates) > 0:
+            if i == 0: points.append(candidates[0])
+            else:
+                to_delete = []
+                for j in range(0, len(candidates)):
+                    diff = points[i-1] - candidates[j]
+                    if abs(diff[0]) < 10 and abs(diff[1]) < 10:
+                        to_delete.append(j)
+                candidates = np.delete(candidates, to_delete, axis=0)
+                if len(candidates) == 0: break
+                points.append(candidates[0])
+            i += 1
+        return points
+
+    # imshow("plantilla",graytemplate)
+
+    marca1 = cv2.imread("Fotos/ford1.jpg", 0)
+    marca2 = cv2.imread("Fotos/ford2.jpg", 0)
+    marca3 = cv2.imread("Fotos/honda1.jpg", 0)
+    marca4 = cv2.imread("Fotos/hyundai1.jpg", 0)
+    marca5 = cv2.imread("Fotos/hyundai2.jpg", 0)
+    marca6 = cv2.imread("Fotos/hyundai3.jpg", 0)
+    marca7 = cv2.imread("Fotos/nissan1.jpg", 0)
+    marca8 = cv2.imread("Fotos/toyota1.jpg", 0)
+    marca9 = cv2.imread("Fotos/toyota2.jpg", 0)
+    marca10 = cv2.imread("Fotos/toyota3.jpg", 0)
+
+    # imshow("plantilla1",marca1)
+    # imshow("plantilla2",marca2)
+    # imshow("plantilla3",marca3)
+    # imshow("plantilla4",marca4)
+    # imshow("plantilla5",marca5)
+    # imshow("plantilla6",marca6)
+    # imshow("plantilla7",marca7)
+    # imshow("plantilla8",marca8)
+    # imshow("plantilla9",marca9)
+    # imshow("plantilla10",marca10)
+
+    logo1 = points_template_matching(graytemplate, marca1)
+    logo2 = points_template_matching(graytemplate, marca2)
+    logo3 = points_template_matching(graytemplate, marca3)
+    logo4 = points_template_matching(graytemplate, marca4)
+    logo5 = points_template_matching(graytemplate, marca5)
+    logo6 = points_template_matching(graytemplate, marca6)
+    logo7 = points_template_matching(graytemplate, marca7)
+    logo8 = points_template_matching(graytemplate, marca8)
+    logo9 = points_template_matching(graytemplate, marca9)
+    logo10 = points_template_matching(graytemplate, marca10)
+
+    ford=False
+    honda=False
+    hyundai=False
+    nissan=False
+    toyota=False
+
+ 
+
+    if((len(logo1)>0)):
+        ford=True
+        logo = tk.PhotoImage(file="Fotos/ford1.png")
+        marca.configure(image=logo)
+        marca.image = logo
+    if((len(logo2)>0)):
+        ford=True
+        logo = tk.PhotoImage(file="Fotos/ford2.png")
+        marca.configure(image=logo)
+        marca.image = logo
+    if((len(logo3)>0)):
+        honda=True
+        logo = tk.PhotoImage(file="Fotos/honda1.png")
+        marca.configure(image=logo)
+        marca.image = logo
+    if((len(logo4)>0)):
+        hyundai=True
+        logo = tk.PhotoImage(file="Fotos/hyundai1.png")
+        marca.configure(image=logo)
+        marca.image = logo
+    if((len(logo5)>0)):
+        hyundai=True
+        logo = tk.PhotoImage(file="Fotos/hyundai2.png")
+        marca.configure(image=logo)
+        marca.image = logo
+    if((len(logo6)>0)):
+        hyundai=True
+        logo = tk.PhotoImage(file="Fotos/hyundai3.png")
+        marca.configure(image=logo)
+        marca.image = logo
+    if((len(logo7)>0)):
+        nissan=True
+        logo = tk.PhotoImage(file="Fotos/nissan1.png")
+        marca.configure(image=logo)
+        marca.image = logo
+    if((len(logo8)>0)):
+        toyota=True
+        logo = tk.PhotoImage(file="Fotos/toyota1.png")
+        marca.configure(image=logo)
+        marca.image = logo
+    if((len(logo9)>0)):
+        toyota=True
+        logo = tk.PhotoImage(file="Fotos/toyota2.png")
+        marca.configure(image=logo)
+        marca.image = logo
+    if((len(logo10)>0)):
+        toyota=True
+        logo = tk.PhotoImage(file="Fotos/toyota3.png")
+        marca.configure(image=logo)
+        marca.image = logo
+    
+
+    if ford==True:
+        marcaVehiculo="ford"
+        print(marcaVehiculo)
+    if honda==True:
+        marcaVehiculo="honda"
+        print(marcaVehiculo)
+    if hyundai==True:
+        marcaVehiculo="hyundai"
+        print(marcaVehiculo)
+    if nissan==True:
+        marcaVehiculo="nissan"
+        print(marcaVehiculo)
+    if toyota==True:
+        marcaVehiculo="toyota"
+        print(marcaVehiculo)
 
 
 def vertickets():
@@ -460,20 +592,50 @@ def ticket():
     nissan=False
     toyota=False
 
-    if((len(logo1)>0)or(len(logo2)>0)):
-        ford=True
+ 
 
+    if((len(logo1)>0)):
+        ford=True
+        logo = tk.PhotoImage(file="Fotos/ford1.png")
+        marca.configure(image=logo)
+
+    if((len(logo2)>0)):
+        ford=True
+        logo = tk.PhotoImage(file="Fotos/ford2.png")
+        marca.configure(image=logo)
     if((len(logo3)>0)):
         honda=True
-
-    if((len(logo4)>0)or(len(logo5)>0)or(len(logo6)>0)):
+        logo = tk.PhotoImage(file="Fotos/honda1.png")
+        marca.configure(image=logo)
+    if((len(logo4)>0)):
         hyundai=True
-
+        logo = tk.PhotoImage(file="Fotos/hyundai1.png")
+        marca.configure(image=logo)
+    if((len(logo5)>0)):
+        hyundai=True
+        logo = tk.PhotoImage(file="Fotos/hyundai2.png")
+        marca.configure(image=logo)
+    if((len(logo6)>0)):
+        hyundai=True
+        logo = tk.PhotoImage(file="Fotos/hyundai3.png")
+        marca.configure(image=logo)
     if((len(logo7)>0)):
         nissan=True
-    
-    if((len(logo8)>0)or(len(logo9)>0)or(len(logo10)>0)):
+        logo = tk.PhotoImage(file="Fotos/nissan1.png")
+        marca.configure(image=logo)
+    if((len(logo8)>0)):
         toyota=True
+        logo = tk.PhotoImage(file="Fotos/toyota1.png")
+        marca.configure(image=logo)
+    if((len(logo9)>0)):
+        toyota=True
+        logo = tk.PhotoImage(file="Fotos/toyota2.png")
+        marca.configure(image=logo)
+    if((len(logo10)>0)):
+        toyota=True
+        logo = tk.PhotoImage(file="Fotos/toyota3.png")
+        marca.configure(image=logo)
+    
 
     if ford==True:
         marcaVehiculo="ford"
@@ -645,8 +807,12 @@ lblUbicationResult= Label(frameReport,text="SPS",font=textoResultado, bg="#CFCFC
 lblUbicationResult.place(relx=0.85, rely=0.03)
 
 lblReport= Label(frameReport,text="Reporte: ",font=textoEnunciado, bg="#CFCFCF").place(relx=0.01, rely=0.17)
-lblReportResult= Listbox(frameReport,font=textoResultado, bg="#CFCFCF", width=60, height=8)
-lblReportResult.place(relx=0.15, rely=0.17)
+lblReportResult= Listbox(frameReport,font=textoResultado, bg="#CFCFCF", width=48, height=8)
+lblReportResult.place(relx=0.01, rely=0.27)
+
+logo = tk.PhotoImage(file="Fotos/ford1.png")
+marca = tk.Label(frameReport, image = logo, width=120,height=120)
+marca.place(relx=0.70, rely=0.27)
 
 
 #panelReporte = tk.Label(marcoCentral,bg="#CFCFCF").place(relx=0.51, rely=0.18,relheight=0.30, relwidth=0.47)
