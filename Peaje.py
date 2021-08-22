@@ -375,7 +375,7 @@ def vertickets():
             except Exception as e:
                 raise
 
-            sql2='SELECT Fecha, Subtotal, Estado_Pago from Ticket  WHERE idVehiculos =  "'+str(vehiculoid)+'" and Estado_Pago=0'
+            sql2='SELECT IdTicket,Fecha, Subtotal, Estado_Pago from Ticket  WHERE idVehiculos =  "'+str(vehiculoid)+'" and Estado_Pago=0'
             print("query2: ",sql2)
             
             ticketfecha=[]
@@ -389,10 +389,10 @@ def vertickets():
                 indexlist=1
                 for row in rows:
                     print(row)
-                    totalticket=totalticket+row[1]
-                    ticketfecha.append( row[0])
-                    ticketsub.append( row[1])
-                    listdata = "Fecha: "+str(row[0])+" - Monto: "+str(row[1])+" - Placa: "+ str(dbplaca)
+                    totalticket=totalticket+row[2]
+                    ticketfecha.append( row[1])
+                    ticketsub.append( row[2])
+                    listdata = "ID: "+str(row[0])+"  Fecha: "+str(row[1])+" - Monto: "+str(row[2])+" - Placa: "+ str(dbplaca)
                     lstTicketResult.insert(indexlist,listdata)
                 
                 lblTicketResult.config(text=str(totalticket)+"Lps.")
@@ -532,6 +532,8 @@ def ticket():
             try:
                 self.cursor.execute(sql3)
                 self.connection.commit()
+                MessageBox.showinfo("Guardo", "El ticket fue asignado correctamente con la fecha de: " + str(today)  )
+                vertickets()
                 print("Se Guardo Con Exito La Consulta: ",sql3)#confirmacion de guardado
                 
             except Exception as e:
@@ -747,10 +749,11 @@ def factura():
                 raise
 
             sql3='INSERT into Factura(IdVehiculos, Total, Fecha, IdEstadoFactura) VALUES ('+str(idVehicle)+', '+str(price)+', "'+str(today)+'", 1)'
+            
             print("query3: ",sql3)
 
             try:
-                price=0
+                #price=0
                 self.cursor.execute(sql3)
                 self.connection.commit()
                 rows = self.cursor.fetchall()
@@ -765,9 +768,10 @@ def factura():
                     self.connection.commit()
                     print("Se Guardo Con Exito La Consulta: ",sql4)#confirmacion de guardado
 
-                i=i+1
+                    i=i+1
 
-            
+                MessageBox.showinfo("Guardo", "La factura se guardo con El Numero de Registro: " + str(idFactura) + "Que tiene   "+ str(i) +"  detalles"+ "   con un total de:  "+str(price))
+                vertickets()
             except Exception as e:
                 raise
             
